@@ -83,7 +83,7 @@ const Footer = () => {
         </div>
 
         <p className="text-sm text-gray-600">
-          © {new Date().getFullYear()} ADVIT CAPITAL ADVISOR All rights reserved.
+          © {new Date().getFullYear()} ADVIT CAPITAL ADVISOR All rights reserved.Designed by Deltaware Solutions pvt. Ltd.
         </p>
       </div>
     </footer>

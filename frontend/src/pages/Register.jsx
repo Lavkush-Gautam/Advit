@@ -1,14 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
-import finance1 from "../assets/finance1.webp";
 import finance2 from "../assets/finance2.jpg";
+import { AuthContext } from "../authContext/AuthProvider";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const formRef = useRef(null);
   const leftPanelRef = useRef(null);
   const rightPanelRef = useRef(null);
+  const { register } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showTerms, setShowTerms] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -31,9 +40,32 @@ const Register = () => {
       );
   }, []);
 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await register(email, fullName, password);
+      toast.success("Registration successful!");
+      navigate("/login");
+    } catch (err) {
+      const message =
+        typeof err === "string" ? err : JSON.stringify(err);
+      toast.error('Registration failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-[#F9F0D3] text-gray-800">
-      {/* Left panel */}
+      {/* Left Panel */}
       <div
         ref={leftPanelRef}
         className="hidden md:flex flex-1 flex-col items-center justify-center p-10 bg-white"
@@ -48,7 +80,7 @@ const Register = () => {
         </p>
       </div>
 
-      {/* Right panel (form) */}
+      {/* Right Panel (Form) */}
       <div
         ref={rightPanelRef}
         className="flex flex-1 items-center justify-center bg-[#F9F0D3]"
@@ -61,7 +93,7 @@ const Register = () => {
             Create an Account
           </h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             {/* Full Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
@@ -70,26 +102,39 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="Enter your full name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-[#F9F0D3]"
               />
             </div>
 
             {/* Email */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-[#F9F0D3]"
               />
             </div>
 
             {/* Password */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Password</label>
+              <label className="block text-sm font-medium mb-2">
+                Password
+              </label>
               <input
                 type="password"
                 placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-[#F9F0D3]"
               />
             </div>
@@ -102,6 +147,9 @@ const Register = () => {
               <input
                 type="password"
                 placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none bg-[#F9F0D3]"
               />
             </div>
@@ -111,7 +159,9 @@ const Register = () => {
               <input
                 type="checkbox"
                 className="mr-2"
+                checked={showTerms}
                 onChange={(e) => setShowTerms(e.target.checked)}
+                required
               />
               <span className="text-sm">
                 I agree to the{" "}
@@ -127,13 +177,18 @@ const Register = () => {
             {/* Register Button */}
             <button
               type="submit"
-              className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              disabled={submitting}
+              className={`w-full py-2 ${
+                submitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+              } text-white rounded-lg transition`}
             >
-              Register
+              {submitting ? "Registering..." : "Register"}
             </button>
           </form>
 
-          {/* Already have account */}
+          {/* Already have an account */}
           <p className="mt-6 text-center text-sm">
             Already have an account?{" "}
             <Link

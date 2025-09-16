@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Send, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import gsap from 'gsap';
 import contact from '../assets/contact.jpg';
+import { AuthContext } from '../authContext/AuthProvider';
+import toast from 'react-hot-toast';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -54,6 +56,8 @@ const ContactUs = () => {
     return () => ctx.revert();
   }, []);
 
+    const { submitContact } = useContext(AuthContext);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -62,20 +66,24 @@ const ContactUs = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add your form submission logic here
-    alert('Thank you for your message! We\'ll get back to you soon.');
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
+    try {
+      const res = await submitContact(formData);
+      toast.success("submitted successfully");
+
+      // Reset form after successful submission
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    } catch (err) {
+     toast.error("Failed to submit. Please try again.");
+    }
   };
 
   const contactInfo = [

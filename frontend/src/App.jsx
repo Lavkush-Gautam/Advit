@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -22,14 +22,14 @@ import UsefulLinks from './pages/tools/UsefulLinks';
 import ModularCalculator from './components/ModularCalculator';
 import Blogs from './pages/Blogs';
 import PerformanceTabs from './components/PerformenceTabs';
-
-// 👇 Import ScrollToTop
 import ScrollToTop from './components/ScrollToTop';
-import FundPerformence from './components/FundPerformence';
+import FundPerformance from './components/FundPerformence';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
-    <Router>
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
       {/* 👇 This will reset scroll on every route change */}
       <ScrollToTop />
       <Navbar />
@@ -64,50 +64,25 @@ const App = () => {
         <Route path="/tools/useful-links" element={<UsefulLinks />} />
 
         {/* Calculator Routes */}
-        <Route
-          path="/tools/financial-calculators/car-planning-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/sip-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/house-planning-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/delay-planning-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/education-planning-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/life-insurance-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/lumpsum-calculator"
-          element={<ModularCalculator />}
-        />
-        <Route
-          path="/tools/financial-calculators/marriage-calculator"
-          element={<ModularCalculator />}
-        />
-
+        <Route path="/tools/financial-calculators/car-planning-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/sip-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/house-planning-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/delay-planning-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/education-planning-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/life-insurance-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/lumpsum-calculator" element={<ModularCalculator />} />
+        <Route path="/tools/financial-calculators/marriage-calculator" element={<ModularCalculator />} />
 
         {/* Performance Tabs */}
         <Route path="/tools/financial-calculators/sip-performance" element={<PerformanceTabs defaultTab="SIP" />} />
         <Route path="/tools/financial-calculators/stp-performance" element={<PerformanceTabs defaultTab="STP" />} />
         <Route path="/tools/financial-calculators/swp-performance" element={<PerformanceTabs defaultTab="SWP" />} />
-        <Route path="/tools/financial-calculators/fund-performance" element={<FundPerformence />} />
+        <Route path="/tools/financial-calculators/fund-performance" element={<FundPerformance />} />
         <Route path="/tools/financial-calculators/scheme-performance" element={<PerformanceTabs defaultTab="Scheme" />} />
       </Routes>
 
       <Footer />
-    </Router>
+    </>
   );
 };
 
